@@ -1,0 +1,3378 @@
+info:
+  title: Knowledge Box & Zone REST API
+  description: API documentation for managing Knowledge Boxes, NUA keys, and API Keys
+    within designated zones.
+  version: v1
+openapi: 3.0.2
+servers:
+- url: https://{region-x}.stashify.cloud
+  description: Development server
+tags:
+- description: Operations for creating, reading, updating, and deleting Knowledge
+    Boxes.
+  name: Knowledge Boxes
+- description: Management of users assigned to a Knowledge Box.
+  name: Users
+- description: Handling Knowledge Box invitation management.
+  name: Invites
+- description: Management of API keys assigned to a Knowledge Box.
+  name: API Keys
+- description: Management of NUA keys.
+  name: NUA Keys
+- description: Management of Activity logs for a Knowledge Box.
+  name: Knowledgebox activity
+paths:
+  /account/{account_id}/backup/{backup_id}:
+    delete:
+      tags:
+      - Backups
+      summary: Delete
+      description: Delete knowledgebox backup
+      operationId: delete_account__account_id__backup__backup_id__delete
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Account Id
+      - name: backup_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Backup Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/backup/{backup_id}/restore:
+    post:
+      tags:
+      - Backups
+      summary: Restore
+      description: Restore a backup into a new knowledgebox
+      operationId: restore_account__account_id__backup__backup_id__restore_post
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Account Id
+      - name: backup_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Backup Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BackupRestore'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/backups:
+    post:
+      tags:
+      - Backups
+      summary: Create
+      description: Create knowledgebox backup
+      operationId: create_account__account_id__backups_post
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Account Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BackupCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Backups
+      summary: List
+      description: Get all backups from an account in a region
+      operationId: list_account__account_id__backups_get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BackupResponse'
+                title: Response List Account  Account Id  Backups Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}:
+    get:
+      tags:
+      - Knowledge Boxes
+      summary: Get Knowledge Box
+      operationId: get_knowledge_box_account__account_id__kb__kb_id__get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeBox'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - Knowledge Boxes
+      summary: Modify Knowledge Box
+      description: Modifies an existing Knowledge Box.
+      operationId: modify_knowledge_box_account__account_id__kb__kb_id__patch
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KnowledgeBoxUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Modify Knowledge Box Account  Account Id  Kb  Kb Id  Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Knowledge Boxes
+      summary: Delete Knowledge Box
+      operationId: delete_knowledge_box_account__account_id__kb__kb_id__delete
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}/ephemeral_tokens:
+    post:
+      tags:
+      - Knowledge Boxes
+      summary: Create Ephemeral Token
+      description: Create an ephemeral token to access the Knowledge Box
+      operationId: create_ephemeral_token_account__account_id__kb__kb_id__ephemeral_tokens_post
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EphemeralTokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}/invite:
+    post:
+      tags:
+      - Invites
+      summary: Invite To Knowledge Box
+      description: Send an invitation to join a Knowledge Box via email.
+      operationId: invite_to_knowledge_box_account__account_id__kb__kb_id__invite_post
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteKnowledgeBoxPayload'
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Invites
+      summary: Delete Invite
+      description: Invalidate an invite to join a Knowledge Box
+      operationId: delete_invite_account__account_id__kb__kb_id__invite_delete
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      - name: email
+        in: query
+        required: true
+        schema:
+          type: string
+          format: email
+          title: Email
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}/invites:
+    get:
+      tags:
+      - Invites
+      summary: Invited Users
+      description: List of users invited to a Knowledge Box, but not yet joined
+      operationId: invited_users_account__account_id__kb__kb_id__invites_get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KbInvitedUser'
+                title: Response Invited Users Account  Account Id  Kb  Kb Id  Invites
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}/logo.png:
+    get:
+      tags:
+      - Knowledge Boxes
+      summary: Download Logo
+      description: Knowledge Box logo
+      operationId: download_logo_account__account_id__kb__kb_id__logo_png_get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      responses:
+        '200':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}/permissions:
+    get:
+      tags:
+      - Knowledge Boxes
+      summary: Get Knowledge Box Permissions
+      operationId: get_knowledge_box_permissions_account__account_id__kb__kb_id__permissions_get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}/service_account/{sa_id}:
+    delete:
+      tags:
+      - API Keys
+      summary: Delete Service Account
+      description: Delete a new Service Account for a Knowledge Box
+      operationId: delete_service_account_account__account_id__kb__kb_id__service_account__sa_id__delete
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      - name: sa_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sa Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}/service_account/{sa_id}/key/{sa_key_id}:
+    delete:
+      tags:
+      - API Keys
+      summary: Delete Api Key
+      description: Delete an API Key of a Knowledge Box
+      operationId: delete_api_key_account__account_id__kb__kb_id__service_account__sa_id__key__sa_key_id__delete
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      - name: sa_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sa Id
+      - name: sa_key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sa Key Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}/service_account/{sa_id}/keys:
+    post:
+      tags:
+      - API Keys
+      summary: Add Service Account Key
+      description: Create an API Key for a Service Account of a Knowledge Box
+      operationId: add_service_account_key_account__account_id__kb__kb_id__service_account__sa_id__keys_post
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      - name: sa_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sa Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceAccountKeyCreation'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceAccountJWT'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}/service_accounts:
+    get:
+      tags:
+      - API Keys
+      summary: List Service Accounts
+      description: List of Service Accounts of a Knowledge Box
+      operationId: list_service_accounts_account__account_id__kb__kb_id__service_accounts_get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceAccount'
+                title: Response List Service Accounts Account  Account Id  Kb  Kb
+                  Id  Service Accounts Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - API Keys
+      summary: Add Service Account
+      description: Create a new Service Account for a Knowledge Box
+      operationId: add_service_account_account__account_id__kb__kb_id__service_accounts_post
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceAccountCreation'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kb/{kb_id}/users:
+    get:
+      tags:
+      - Users
+      summary: Users
+      description: List of users of a Knowledge Box
+      operationId: users_account__account_id__kb__kb_id__users_get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      - name: include_user_detail
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Include User Detail
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KbUser'
+                title: Response Users Account  Account Id  Kb  Kb Id  Users Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - Users
+      summary: Update Users
+      description: Assign or remove users from a Knowledge Box
+      operationId: update_users_account__account_id__kb__kb_id__users_patch
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Kb Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateKbUsers'
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/kbs:
+    get:
+      tags:
+      - Knowledge Boxes
+      summary: List Knowledge Boxes
+      description: List all region Knowledge Boxes that belongs to an specific account
+        that the authenticated user can see
+      operationId: list_knowledge_boxes_account__account_id__kbs_get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KnowledgeBoxSummary'
+                title: Response List Knowledge Boxes Account  Account Id  Kbs Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - Knowledge Boxes
+      summary: Create Knowledge Box
+      description: Creates a new Knowledge Box. The accepted values for the `learning_configuration`
+        are dynamic and may be dependant of the account used. Accepted field values
+        needs to be checked on the 'Learning configuration schema' endpoint
+      operationId: create_knowledge_box_account__account_id__kbs_post
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KnowledgeBoxCreation'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/nua_client/{client_id}:
+    delete:
+      tags:
+      - NUA Keys
+      summary: Delete Nua Client By Id
+      description: Deletes an existing Nuclia Understanding API client
+      operationId: delete_nua_client_by_id_account__account_id__nua_client__client_id__delete
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: client_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-z0-9_-]+$
+          title: Client Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - NUA Keys
+      summary: Get Nua Client By Id
+      description: Gets the metadata of an existing Nuclia Understanding API
+      operationId: get_nua_client_by_id_account__account_id__nua_client__client_id__get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: client_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-z0-9_-]+$
+          title: Client Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NUAClientMetadata'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/nua_client/{client_id}/key:
+    put:
+      tags:
+      - NUA Keys
+      summary: Set Account Nua Client Key
+      description: Recreates a new session key for an existing Nuclia Understanding
+        API client
+      operationId: set_account_nua_client_key_account__account_id__nua_client__client_id__key_put
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: client_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-z0-9_-]+$
+          title: Client Id
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NUAClient'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /account/{account_id}/nua_clients:
+    get:
+      tags:
+      - NUA Keys
+      summary: Get Account Nua Clients
+      description: Gets the list of Nuclia Understanding API clients of an account
+      operationId: get_account_nua_clients_account__account_id__nua_clients_get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: client_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NUAClientsMetadata'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - NUA Keys
+      summary: Create Account Nua Client
+      description: Create a new Nuclia Understanding API client for an account
+      operationId: create_account_nua_client_account__account_id__nua_clients_post
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NUAClientKeyCreation'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NUAClient'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/auth/magic: {}
+  /api/export/{export_id}/import_to/{kb_uuid}: {}
+  /api/exports: {}
+  /kb/{kb_id}/activity/download_request/{request_id}:
+    get:
+      tags:
+      - Knowledgebox activity
+      summary: Get Download Status
+      description: Get the status of a download request by Knowledgebox ID and request
+        ID
+      operationId: get_download_status_kb__kb_id__activity_download_request__request_id__get
+      parameters:
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kb Id
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid1
+          title: Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadRequest'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /kb/{kb_id}/activity/metrics:
+    get:
+      tags:
+      - Knowledgebox activity
+      summary: Activity Logs Metrics
+      description: Get metrics for search and chat logs
+      operationId: activity_logs_metrics_kb__kb_id__activity_metrics_get
+      parameters:
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kb Id
+      - name: aggregation
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/Aggregation'
+          default: millennium
+      - name: from
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date-time
+          title: From
+      - name: to
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          default: '2025-03-12T10:10:09.591500'
+          title: To
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ActivityUsageResponse'
+                title: Response Activity Logs Metrics Kb  Kb Id  Activity Metrics
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /kb/{kb_id}/activity/{event_type}/months:
+    get:
+      tags:
+      - Knowledgebox activity
+      summary: Get Knowledgebox Activity Downloads List
+      description: Get the list of monthly activity audit files available to download
+      operationId: Get_Knowledgebox_Activity_Downloads_List_kb__kb_id__activity__event_type__months_get
+      parameters:
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kb Id
+      - name: event_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/EventType'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDownloadsList'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /kb/{kb_id}/activity/{event_type}/query:
+    post:
+      tags:
+      - Knowledgebox activity
+      summary: Query Knowledgebox Activity Logs
+      description: Query Knowledgebox Activity Logs
+      operationId: Query_Knowledgebox_Activity_Logs_kb__kb_id__activity__event_type__query_post
+      parameters:
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kb Id
+      - name: event_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/EventType'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/ActivityLogsQuery'
+              - $ref: '#/components/schemas/ActivityLogsSearchQuery'
+              - $ref: '#/components/schemas/ActivityLogsChatQuery'
+              title: Body
+      responses:
+        '200':
+          description: Returns data in NDJSON format
+          content:
+            application/x-ndjson:
+              example: '{"id":0,"date":null,"user_id":null,"user_type":null,"client_type":null,"total_duration":null,"audit_metadata":null,"resource_id":null,"nuclia_tokens":null,"question":null,"resources_count":null,"filter":null,"learning_id":null,"rephrased_question":null,"answer":null,"retrieved_context":null,"chat_history":null,"feedback_good":null,"feedback_comment":null,"feedback_good_all":null,"feedback_good_any":null,"feedback":null,"model":null,"rag_strategies_names":null,"rag_strategies":null,"status":null,"time_to_first_char":null,"remi_scores":null}
+
+                '
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /kb/{kb_id}/activity/{event_type}/query/download:
+    post:
+      tags:
+      - Knowledgebox activity
+      summary: Request The Preparation Of Knowledgebox Activity Logs Download
+      description: Request Knowledgebox Activity Logs download
+      operationId: Request_the_preparation_of_Knowledgebox_Activity_Logs_download_kb__kb_id__activity__event_type__query_download_post
+      parameters:
+      - name: kb_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kb Id
+      - name: event_type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/EventType'
+      - name: accept
+        in: header
+        required: true
+        schema:
+          enum:
+          - application/x-ndjson
+          - text/csv
+          type: string
+          title: Accept
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/DownloadActivityLogsQuery'
+              - $ref: '#/components/schemas/DownloadActivityLogsSearchQuery'
+              - $ref: '#/components/schemas/DownloadActivityLogsChatQuery'
+              title: Body
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadRequest'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /kb/{kb_uuid}/activity/download:
+    get:
+      tags:
+      - Knowledgebox activity
+      summary: Download Knowledgebox Activity
+      description: Download the csv file for the activity audit for a given month
+      operationId: Download_Knowledgebox_Activity_kb__kb_uuid__activity_download_get
+      parameters:
+      - name: kb_uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kb Uuid
+      - name: type
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/EventType'
+          description: Audit event type
+        description: Audit event type
+      - name: month
+        in: query
+        required: true
+        schema:
+          type: string
+          pattern: ^\d+-(0[1-9]|1[012])$
+          description: Month in YYYY-MM format
+          title: Month
+        description: Month in YYYY-MM format
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /kb/{kb_uuid}/activity/downloads:
+    get:
+      tags:
+      - Knowledgebox activity
+      summary: Get Knowledgebox Activity Downloads List
+      description: Get the list of monthly activity audit files available to download
+      operationId: Get_Knowledgebox_Activity_Downloads_List_kb__kb_uuid__activity_downloads_get
+      parameters:
+      - name: kb_uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kb Uuid
+      - name: type
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/EventType'
+          description: Audit event type
+        description: Audit event type
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDownloadsList'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /kb/{kb_uuid}/remi/events/{event_id}:
+    get:
+      tags:
+      - Knowledgebox activity
+      summary: Get A Rag Request With Related Remi Scores And Full Context
+      description: Get a rag request with full context and REMI scores. Intended for
+        obtaining complete context for an item originating from a /remi/query
+      operationId: Get_a_rag_request_with_related_remi_scores_and_full_context_kb__kb_uuid__remi_events__event_id__get
+      parameters:
+      - name: kb_uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kb Uuid
+      - name: event_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Event Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemiQueryResultWithContext'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /kb/{kb_uuid}/remi/query:
+    post:
+      tags:
+      - Knowledgebox activity
+      summary: Query Rag Requests By Scores
+      description: Get a list of rag request that matches a remi scores query
+      operationId: Query_rag_requests_by_scores_kb__kb_uuid__remi_query_post
+      parameters:
+      - name: kb_uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kb Uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemiQuery'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemiQueryResults'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /kb/{kb_uuid}/remi/scores:
+    get:
+      tags:
+      - Knowledgebox activity
+      summary: Aggregated Remi Scores Across Time
+      description: Get the evolution of remi scores of a kb on a period of time
+      operationId: Aggregated_remi_scores_across_time_kb__kb_uuid__remi_scores_get
+      parameters:
+      - name: kb_uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kb Uuid
+      - name: aggregation
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/Aggregation'
+          default: millennium
+      - name: from
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date-time
+          title: From
+      - name: to
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          default: '2025-03-12T10:10:09.608571'
+          title: To
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AggregatedRemiScoreMetric'
+                title: Response Aggregated Remi Scores Across Time Kb  Kb Uuid  Remi
+                  Scores Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /metrics:
+    get:
+      summary: Metrics
+      description: Endpoint that serves Prometheus metrics.
+      operationId: metrics_metrics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /service_account_temporal_key:
+    post:
+      tags:
+      - Knowledge Boxes
+      summary: Create Temporal Secure Token
+      description: Create an ephemeral token to access the Knowledge Box
+      operationId: create_temporal_secure_token_service_account_temporal_key_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/TemporalServiceAccountKeyCreation'
+              - type: 'null'
+              title: Payload
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemporalSecurityTokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+x-metadata:
+  idp_regional:
+    commit: a9113f57b981626018434e665003130d4305155a
+    last_updated: '2025-03-12T16:40:53.054973'
+  events:
+    commit: beb8df1babf2609f0d799fb8b11fdac46bf9a6c0
+    last_updated: '2025-03-12T10:10:09.875794'
+components:
+  schemas:
+    AddKbUser:
+      properties:
+        id:
+          type: string
+          title: Id
+        role:
+          $ref: '#/components/schemas/KbRole'
+      type: object
+      required:
+      - id
+      - role
+      title: AddKbUser
+    BackupCreate:
+      properties:
+        kb_id:
+          type: string
+          format: uuid4
+          title: Kb Id
+          description: The unique identifier of the knowledgebox to backup.
+      type: object
+      required:
+      - kb_id
+      title: BackupCreate
+    BackupCreateResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+          description: The unique identifier of the created backup.
+      type: object
+      required:
+      - id
+      title: BackupCreateResponse
+    BackupResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+          description: The unique identifier of the backup.
+        account_id:
+          type: string
+          format: uuid4
+          title: Account Id
+          description: The unique identifier of the account associated with the backup.
+        started_at:
+          type: string
+          format: date-time
+          title: Started At
+          description: The timestamp when the backup process started.
+        kb_data:
+          $ref: '#/components/schemas/KBDataResponse'
+          description: Metadata of the backed-up knowledgebox.
+        finished_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Finished At
+          description: The timestamp when the backup process finished.
+        size:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Size
+          description: The size of the backup in bytes.
+      type: object
+      required:
+      - id
+      - account_id
+      - started_at
+      - kb_data
+      title: BackupResponse
+    BackupRestore:
+      properties:
+        slug:
+          type: string
+          title: Slug
+          description: The slug of the new restored knowledgebox.
+        title:
+          type: string
+          title: Title
+          description: The title of the new restored knowledgebox.
+      type: object
+      required:
+      - slug
+      - title
+      title: BackupRestore
+    BatchUpdateKbUsers:
+      properties:
+        add:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AddKbUser'
+            type: array
+          - type: 'null'
+          title: Add
+        update:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/UpdateKbUser'
+            type: array
+          - type: 'null'
+          title: Update
+        delete:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Delete
+      type: object
+      title: BatchUpdateKbUsers
+    EphemeralTokenResponse:
+      properties:
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - token
+      title: EphemeralTokenResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    InviteKnowledgeBoxPayload:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        role:
+          $ref: '#/components/schemas/KbRole'
+      type: object
+      required:
+      - email
+      - role
+      title: InviteKnowledgeBoxPayload
+    ItemCreated:
+      properties:
+        id:
+          type: string
+          title: Id
+      type: object
+      required:
+      - id
+      title: ItemCreated
+    KBDataResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+          description: The unique identifier of the knowledgebox.
+        slug:
+          type: string
+          title: Slug
+          description: A human-readable, URL-friendly identifier for the knowledgebox.
+        title:
+          type: string
+          title: Title
+          description: The title of the knowledgebox.
+        created:
+          type: string
+          format: date-time
+          title: Created
+          description: The timestamp when the knowledgebox was created.
+      type: object
+      required:
+      - id
+      - slug
+      - title
+      - created
+      title: KBDataResponse
+    KBExternalIndexProviderType:
+      type: string
+      enum:
+      - pinecone
+      const: pinecone
+      title: KBExternalIndexProviderType
+    KbInvitedUser:
+      properties:
+        email:
+          type: string
+          title: Email
+        role:
+          $ref: '#/components/schemas/KbRole'
+        expires:
+          type: string
+          format: date-time
+          title: Expires
+      type: object
+      required:
+      - email
+      - role
+      - expires
+      title: KbInvitedUser
+    KbRole:
+      type: string
+      enum:
+      - SOWNER
+      - SMEMBER
+      - SCONTRIBUTOR
+      title: KbRole
+    KbState:
+      type: string
+      enum:
+      - PUBLISHED
+      - PRIVATE
+      title: KbState
+    KbUser:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        role:
+          $ref: '#/components/schemas/KbRole'
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+      type: object
+      required:
+      - id
+      - role
+      title: KbUser
+    KnowledgeBox:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        account_id:
+          type: string
+          title: Account Id
+        zone:
+          type: string
+          title: Zone
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        state:
+          $ref: '#/components/schemas/KbState'
+        created:
+          type: string
+          format: date-time
+          title: Created
+        admin:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Admin
+        contrib:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Contrib
+        allowed_origins:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Allowed Origins
+        search_configs:
+          type: object
+          title: Search Configs
+          default: {}
+        external_index_provider:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Index Provider
+      type: object
+      required:
+      - id
+      - account_id
+      - zone
+      - state
+      - created
+      title: KnowledgeBox
+    KnowledgeBoxCreation:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        sentence_embedder:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sentence Embedder
+          deprecated: true
+        anonymization:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Anonymization
+          deprecated: true
+        learning_configuration:
+          type: object
+          title: Learning Configuration
+        allowed_origins:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            minItems: 1
+          - type: 'null'
+          title: Allowed Origins
+        external_index_provider:
+          anyOf:
+          - $ref: '#/components/schemas/PineoneKBIndexProvider'
+          - type: 'null'
+          title: External index provider
+          description: External index provider configuration for the Knowledge Box.
+            If not set, the default NucliaDB's index will be used.
+          examples:
+          - api_key: <my-pinecone-api-key>
+            serverless_cloud: aws_us_east_1
+            type: pinecone
+        search_configs:
+          type: object
+          title: Search Configs
+          default: {}
+      type: object
+      title: KnowledgeBoxCreation
+    KnowledgeBoxSummary:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          type: string
+          title: Slug
+        zone:
+          type: string
+          title: Zone
+        title:
+          type: string
+          title: Title
+        state:
+          $ref: '#/components/schemas/KbState'
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        role_on_kb:
+          anyOf:
+          - $ref: '#/components/schemas/KbRole'
+          - type: 'null'
+        allowed_origins:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Allowed Origins
+        search_configs:
+          type: object
+          title: Search Configs
+        external_index_provider:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Index Provider
+      type: object
+      required:
+      - id
+      - zone
+      - state
+      - search_configs
+      title: KnowledgeBoxSummary
+    KnowledgeBoxUpdate:
+      properties:
+        slug:
+          anyOf:
+          - type: string
+            pattern: ^[a-z0-9_-]+$
+          - type: 'null'
+          title: Slug
+        title:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Title
+        state:
+          anyOf:
+          - $ref: '#/components/schemas/KbState'
+          - type: 'null'
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        allowed_origins:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            minItems: 1
+          - type: 'null'
+          title: Allowed Origins
+        search_configs:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Search Configs
+      type: object
+      title: KnowledgeBoxUpdate
+    NUAClient:
+      properties:
+        token:
+          type: string
+          title: Token
+        client_id:
+          type: string
+          title: Client Id
+      type: object
+      required:
+      - token
+      - client_id
+      title: NUAClient
+    NUAClientKeyCreation:
+      properties:
+        contact:
+          type: string
+          title: Contact
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          default: ''
+        client_id:
+          anyOf:
+          - type: string
+            pattern: ^[a-z0-9_-]+$
+          - type: 'null'
+          title: Client Id
+        processing_webhook:
+          anyOf:
+          - $ref: '#/components/schemas/ProcessingWebhook'
+          - type: 'null'
+        allow_kb_management:
+          type: boolean
+          title: Allow Kb Management
+          default: false
+      type: object
+      required:
+      - contact
+      title: NUAClientKeyCreation
+    NUAClientMetadata:
+      properties:
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          default: ''
+        contact:
+          type: string
+          title: Contact
+        created:
+          type: string
+          format: date-time
+          title: Created
+        partitions:
+          type: integer
+          title: Partitions
+        client_id:
+          type: string
+          title: Client Id
+        account_id:
+          type: string
+          title: Account Id
+        processing_webhook:
+          anyOf:
+          - $ref: '#/components/schemas/ProcessingWebhook'
+          - type: 'null'
+      type: object
+      required:
+      - contact
+      - created
+      - partitions
+      - account_id
+      title: NUAClientMetadata
+    NUAClientsMetadata:
+      properties:
+        clients:
+          items:
+            $ref: '#/components/schemas/NUAClientMetadata'
+          type: array
+          title: Clients
+      type: object
+      required:
+      - clients
+      title: NUAClientsMetadata
+    PermissionsResponse:
+      properties:
+        permissions:
+          items:
+            type: string
+          type: array
+          title: Permissions
+      type: object
+      required:
+      - permissions
+      title: PermissionsResponse
+    PineconeServerlessCloud:
+      type: string
+      enum:
+      - aws_us_east_1
+      - aws_us_west_2
+      - aws_eu_west_1
+      - gcp_us_central1
+      - azure_eastus2
+      title: PineconeServerlessCloud
+      description: List of cloud providers supported by Pinecone serverless vector
+        database.
+    PineoneKBIndexProvider:
+      properties:
+        type:
+          $ref: '#/components/schemas/KBExternalIndexProviderType'
+          default: pinecone
+        api_key:
+          type: string
+          title: Pinecone API Key
+          description: API key for the Pinecone project. See https://docs.pinecone.io/guides/projects/understanding-projects#api-keys
+        serverless_cloud:
+          $ref: '#/components/schemas/PineconeServerlessCloud'
+          title: Pinecone Serverless Cloud
+          description: Pick the cloud region where your Pinecone indexes will be hosted.
+            By default, it's AWS US East 1. See https://docs.pinecone.io/troubleshooting/available-cloud-regions#regions-available-for-serverless-indexes
+          default: aws_us_east_1
+      type: object
+      required:
+      - api_key
+      title: PineoneKBIndexProvider
+    ProcessingWebhook:
+      properties:
+        uri:
+          type: string
+          title: Uri
+        headers:
+          additionalProperties:
+            type: string
+          type: object
+          title: Headers
+          default: {}
+      type: object
+      required:
+      - uri
+      title: ProcessingWebhook
+    ServiceAccount:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        role:
+          $ref: '#/components/schemas/KbRole'
+        keys:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ServiceAccountKey'
+            type: array
+          - type: 'null'
+          title: Keys
+      type: object
+      required:
+      - id
+      - role
+      title: ServiceAccount
+    ServiceAccountCreation:
+      properties:
+        title:
+          type: string
+          title: Title
+        role:
+          $ref: '#/components/schemas/KbRole'
+      type: object
+      required:
+      - role
+      title: ServiceAccountCreation
+    ServiceAccountJWT:
+      properties:
+        id:
+          type: string
+          title: Id
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - id
+      - token
+      title: ServiceAccountJWT
+    ServiceAccountKey:
+      properties:
+        id:
+          type: string
+          title: Id
+        created:
+          type: string
+          format: date-time
+          title: Created
+        expires:
+          type: string
+          format: date-time
+          title: Expires
+      type: object
+      required:
+      - id
+      - created
+      - expires
+      title: ServiceAccountKey
+    ServiceAccountKeyCreation:
+      properties:
+        expires:
+          type: string
+          format: date-time
+          title: Expires
+      type: object
+      required:
+      - expires
+      title: ServiceAccountKeyCreation
+    TemporalSecurityTokenResponse:
+      properties:
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - token
+      title: TemporalSecurityTokenResponse
+    TemporalServiceAccountKeyCreation:
+      properties:
+        ttl:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Ttl
+          default: 10
+        security_groups:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Security Groups
+      type: object
+      title: TemporalServiceAccountKeyCreation
+    UpdateKbUser:
+      properties:
+        id:
+          type: string
+          title: Id
+        role:
+          $ref: '#/components/schemas/KbRole'
+      type: object
+      required:
+      - id
+      - role
+      title: UpdateKbUser
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AccountType:
+      type: string
+      enum:
+      - stash-trial
+      - stash-starter
+      - stash-growth
+      - stash-startup
+      - stash-enterprise
+      - stash-developer
+      - stash-business
+      - v3starter
+      - v3fly
+      - v3growth
+      - v3enterprise
+      title: AccountType
+    KnowledgeBoxExport:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+      - id
+      - title
+      - description
+      title: KnowledgeBoxExport
+    ActivityLogsChatQuery:
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+          default:
+            limit: 10
+        year_month:
+          type: string
+          title: Year Month
+        show:
+          items:
+            type: string
+            enum:
+            - id
+            - date
+            - user_id
+            - user_type
+            - client_type
+            - total_duration
+            - audit_metadata
+            - resource_id
+            - nuclia_tokens
+            - question
+            - resources_count
+            - filter
+            - learning_id
+            - rephrased_question
+            - answer
+            - retrieved_context
+            - chat_history
+            - feedback_good
+            - feedback_comment
+            - feedback_good_all
+            - feedback_good_any
+            - feedback
+            - model
+            - rag_strategies_names
+            - rag_strategies
+            - status
+            - time_to_first_char
+            - remi_scores
+          type: array
+          uniqueItems: true
+          title: Show
+          default:
+          - rag_strategies_names
+          - question
+          - date
+          - id
+          - resources_count
+          - rephrased_question
+          - answer
+        filters:
+          $ref: '#/components/schemas/QueryFiltersChat'
+      additionalProperties: false
+      type: object
+      required:
+      - year_month
+      - filters
+      title: ActivityLogsChatQuery
+    ActivityLogsQuery:
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+          default:
+            limit: 10
+        year_month:
+          type: string
+          title: Year Month
+        show:
+          items:
+            type: string
+            enum:
+            - id
+            - date
+            - user_id
+            - user_type
+            - client_type
+            - total_duration
+            - audit_metadata
+            - resource_id
+            - nuclia_tokens
+          type: array
+          uniqueItems: true
+          title: Show
+          default:
+          - id
+          - date
+        filters:
+          $ref: '#/components/schemas/QueryFiltersCommon'
+      additionalProperties: false
+      type: object
+      required:
+      - year_month
+      - filters
+      title: ActivityLogsQuery
+    ActivityLogsSearchQuery:
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+          default:
+            limit: 10
+        year_month:
+          type: string
+          title: Year Month
+        show:
+          items:
+            type: string
+            enum:
+            - id
+            - date
+            - user_id
+            - user_type
+            - client_type
+            - total_duration
+            - audit_metadata
+            - resource_id
+            - nuclia_tokens
+            - question
+            - resources_count
+            - filter
+            - learning_id
+          type: array
+          uniqueItems: true
+          title: Show
+          default:
+          - id
+          - resources_count
+          - question
+          - date
+        filters:
+          $ref: '#/components/schemas/QueryFiltersSearch'
+      additionalProperties: false
+      type: object
+      required:
+      - year_month
+      - filters
+      title: ActivityLogsSearchQuery
+    ActivityUsageResponse:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        search:
+          type: integer
+          title: Search
+        chat:
+          type: integer
+          title: Chat
+      type: object
+      required:
+      - timestamp
+      - search
+      - chat
+      title: ActivityUsageResponse
+    AggregatedRemiScoreMetric:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        metrics:
+          items:
+            $ref: '#/components/schemas/AggregatedRemiScoreValues'
+          type: array
+          title: Metrics
+      type: object
+      required:
+      - timestamp
+      - metrics
+      title: AggregatedRemiScoreMetric
+    AggregatedRemiScoreValues:
+      properties:
+        name:
+          type: string
+          title: Name
+        min:
+          type: number
+          title: Min
+        max:
+          type: number
+          title: Max
+        average:
+          type: number
+          title: Average
+      type: object
+      required:
+      - name
+      - min
+      - max
+      - average
+      title: AggregatedRemiScoreValues
+    Aggregation:
+      type: string
+      enum:
+      - hour
+      - day
+      - week
+      - month
+      - quarter
+      - year
+      - millennium
+      title: Aggregation
+    AuditMetadata:
+      properties:
+        eq:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Eq
+        gt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gt
+        ge:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ge
+        lt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lt
+        le:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Le
+        ne:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ne
+        isnull:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isnull
+        like:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Like
+        ilike:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ilike
+        key:
+          type: string
+          title: Key
+      additionalProperties: false
+      type: object
+      required:
+      - key
+      title: AuditMetadata
+    ClientType:
+      type: string
+      enum:
+      - api
+      - widget
+      - web
+      - dashboard
+      - desktop
+      - chrome_extension
+      title: ClientType
+    ContextRelevanceQuery:
+      properties:
+        value:
+          type: integer
+          title: Value
+        operation:
+          type: string
+          enum:
+          - gt
+          - lt
+          - eq
+          title: Operation
+        aggregation:
+          type: string
+          enum:
+          - average
+          - max
+          - min
+          title: Aggregation
+      type: object
+      required:
+      - value
+      - operation
+      - aggregation
+      title: ContextRelevanceQuery
+    DownloadActivityLogsChatQuery:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        show:
+          items:
+            type: string
+            enum:
+            - id
+            - date
+            - user_id
+            - user_type
+            - client_type
+            - total_duration
+            - audit_metadata
+            - resource_id
+            - nuclia_tokens
+            - question
+            - resources_count
+            - filter
+            - learning_id
+            - rephrased_question
+            - answer
+            - retrieved_context
+            - chat_history
+            - feedback_good
+            - feedback_comment
+            - feedback_good_all
+            - feedback_good_any
+            - feedback
+            - model
+            - rag_strategies_names
+            - rag_strategies
+            - status
+            - time_to_first_char
+            - remi_scores
+          type: array
+          uniqueItems: true
+          title: Show
+          default:
+          - rag_strategies_names
+          - question
+          - date
+          - id
+          - resources_count
+          - rephrased_question
+          - answer
+        filters:
+          $ref: '#/components/schemas/QueryFiltersChat'
+        email_address:
+          anyOf:
+          - type: string
+            format: email
+          - type: 'null'
+          title: Email Address
+        notify_via_email:
+          type: boolean
+          title: Notify Via Email
+          default: false
+      additionalProperties: false
+      type: object
+      required:
+      - year_month
+      - filters
+      title: DownloadActivityLogsChatQuery
+    DownloadActivityLogsQuery:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        show:
+          items:
+            type: string
+            enum:
+            - id
+            - date
+            - user_id
+            - user_type
+            - client_type
+            - total_duration
+            - audit_metadata
+            - resource_id
+            - nuclia_tokens
+          type: array
+          uniqueItems: true
+          title: Show
+          default:
+          - id
+          - date
+        filters:
+          $ref: '#/components/schemas/QueryFiltersCommon'
+        email_address:
+          anyOf:
+          - type: string
+            format: email
+          - type: 'null'
+          title: Email Address
+        notify_via_email:
+          type: boolean
+          title: Notify Via Email
+          default: false
+      additionalProperties: false
+      type: object
+      required:
+      - year_month
+      - filters
+      title: DownloadActivityLogsQuery
+    DownloadActivityLogsSearchQuery:
+      properties:
+        year_month:
+          type: string
+          title: Year Month
+        show:
+          items:
+            type: string
+            enum:
+            - id
+            - date
+            - user_id
+            - user_type
+            - client_type
+            - total_duration
+            - audit_metadata
+            - resource_id
+            - nuclia_tokens
+            - question
+            - resources_count
+            - filter
+            - learning_id
+          type: array
+          uniqueItems: true
+          title: Show
+          default:
+          - id
+          - resources_count
+          - question
+          - date
+        filters:
+          $ref: '#/components/schemas/QueryFiltersSearch'
+        email_address:
+          anyOf:
+          - type: string
+            format: email
+          - type: 'null'
+          title: Email Address
+        notify_via_email:
+          type: boolean
+          title: Notify Via Email
+          default: false
+      additionalProperties: false
+      type: object
+      required:
+      - year_month
+      - filters
+      title: DownloadActivityLogsSearchQuery
+    DownloadFormat:
+      type: string
+      enum:
+      - ndjson
+      - csv
+      title: DownloadFormat
+    DownloadRequest:
+      properties:
+        request_id:
+          type: string
+          title: Request Id
+        download_type:
+          $ref: '#/components/schemas/DownloadRequestType'
+        download_format:
+          $ref: '#/components/schemas/DownloadFormat'
+        event_type:
+          $ref: '#/components/schemas/EventType'
+        requested_at:
+          type: string
+          format: date-time
+          title: Requested At
+        kb_id:
+          type: string
+          title: Kb Id
+        download_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Download Url
+      type: object
+      required:
+      - request_id
+      - download_type
+      - download_format
+      - event_type
+      - requested_at
+      - kb_id
+      - download_url
+      title: DownloadRequest
+    DownloadRequestType:
+      type: string
+      enum:
+      - query
+      title: DownloadRequestType
+    EventDownloadsList:
+      properties:
+        downloads:
+          items:
+            type: string
+          type: array
+          title: Downloads
+      type: object
+      required:
+      - downloads
+      title: EventDownloadsList
+    EventType:
+      type: string
+      enum:
+      - visited
+      - modified
+      - deleted
+      - new
+      - search
+      - suggest
+      - indexed
+      - chat
+      - started
+      - stopped
+      - processed
+      title: EventType
+    GenericFilter_ClientType_:
+      properties:
+        eq:
+          anyOf:
+          - $ref: '#/components/schemas/ClientType'
+          - type: 'null'
+        gt:
+          anyOf:
+          - $ref: '#/components/schemas/ClientType'
+          - type: 'null'
+        ge:
+          anyOf:
+          - $ref: '#/components/schemas/ClientType'
+          - type: 'null'
+        lt:
+          anyOf:
+          - $ref: '#/components/schemas/ClientType'
+          - type: 'null'
+        le:
+          anyOf:
+          - $ref: '#/components/schemas/ClientType'
+          - type: 'null'
+        ne:
+          anyOf:
+          - $ref: '#/components/schemas/ClientType'
+          - type: 'null'
+        isnull:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isnull
+      additionalProperties: false
+      type: object
+      title: GenericFilter[ClientType]
+    GenericFilter_UserType_:
+      properties:
+        eq:
+          anyOf:
+          - $ref: '#/components/schemas/UserType'
+          - type: 'null'
+        gt:
+          anyOf:
+          - $ref: '#/components/schemas/UserType'
+          - type: 'null'
+        ge:
+          anyOf:
+          - $ref: '#/components/schemas/UserType'
+          - type: 'null'
+        lt:
+          anyOf:
+          - $ref: '#/components/schemas/UserType'
+          - type: 'null'
+        le:
+          anyOf:
+          - $ref: '#/components/schemas/UserType'
+          - type: 'null'
+        ne:
+          anyOf:
+          - $ref: '#/components/schemas/UserType'
+          - type: 'null'
+        isnull:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isnull
+      additionalProperties: false
+      type: object
+      title: GenericFilter[UserType]
+    GenericFilter_bool_:
+      properties:
+        eq:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Eq
+        gt:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Gt
+        ge:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Ge
+        lt:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Lt
+        le:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Le
+        ne:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Ne
+        isnull:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isnull
+      additionalProperties: false
+      type: object
+      title: GenericFilter[bool]
+    GenericFilter_float_:
+      properties:
+        eq:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Eq
+        gt:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Gt
+        ge:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Ge
+        lt:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Lt
+        le:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Le
+        ne:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Ne
+        isnull:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isnull
+      additionalProperties: false
+      type: object
+      title: GenericFilter[float]
+    GenericFilter_int_:
+      properties:
+        eq:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Eq
+        gt:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Gt
+        ge:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ge
+        lt:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Lt
+        le:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Le
+        ne:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ne
+        isnull:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isnull
+      additionalProperties: false
+      type: object
+      title: GenericFilter[int]
+    GenericFilter_str_:
+      properties:
+        eq:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Eq
+        gt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gt
+        ge:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ge
+        lt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lt
+        le:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Le
+        ne:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ne
+        isnull:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isnull
+      additionalProperties: false
+      type: object
+      title: GenericFilter[str]
+    Pagination:
+      properties:
+        limit:
+          type: integer
+          maximum: 1000.0
+          minimum: 0.0
+          title: Limit
+          default: 10
+        starting_after:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Starting After
+        ending_before:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ending Before
+      type: object
+      title: Pagination
+    QueryFiltersChat:
+      properties:
+        id:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_int_'
+          - type: 'null'
+        user_id:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_str_'
+          - type: 'null'
+        user_type:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_UserType_'
+          - type: 'null'
+        client_type:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_ClientType_'
+          - type: 'null'
+        total_duration:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_float_'
+          - type: 'null'
+        audit_metadata:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AuditMetadata'
+            type: array
+          - type: 'null'
+          title: Audit Metadata
+        nuclia_tokens:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_float_'
+          - type: 'null'
+        question:
+          anyOf:
+          - $ref: '#/components/schemas/StringFilter'
+          - type: 'null'
+        resources_count:
+          anyOf:
+          - $ref: '#/components/schemas/StringFilter'
+          - type: 'null'
+          cast_to: int
+        rephrased_question:
+          anyOf:
+          - $ref: '#/components/schemas/StringFilter'
+          - type: 'null'
+        answer:
+          anyOf:
+          - $ref: '#/components/schemas/StringFilter'
+          - type: 'null'
+        feedback_good:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_bool_'
+          - type: 'null'
+          description: True if the feedback provided for the main question is positive.
+          cast_to: bool
+        feedback_comment:
+          anyOf:
+          - $ref: '#/components/schemas/StringFilter'
+          - type: 'null'
+          description: User-provided comment on the feedback for the question.
+        feedback_good_all:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_bool_'
+          - type: 'null'
+          description: True if all feedback, including that on the main question and
+            each related text block, is positive.
+          cast_to: bool
+        feedback_good_any:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_bool_'
+          - type: 'null'
+          description: True if there is any positive feedback on the question itself
+            or any related text block.
+          cast_to: bool
+        model:
+          anyOf:
+          - $ref: '#/components/schemas/StringFilter'
+          - type: 'null'
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_int_'
+          - type: 'null'
+          cast_to: int
+      additionalProperties: false
+      type: object
+      title: QueryFiltersChat
+    QueryFiltersCommon:
+      properties:
+        id:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_int_'
+          - type: 'null'
+        user_id:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_str_'
+          - type: 'null'
+        user_type:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_UserType_'
+          - type: 'null'
+        client_type:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_ClientType_'
+          - type: 'null'
+        total_duration:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_float_'
+          - type: 'null'
+        audit_metadata:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AuditMetadata'
+            type: array
+          - type: 'null'
+          title: Audit Metadata
+        nuclia_tokens:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_float_'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      title: QueryFiltersCommon
+    QueryFiltersSearch:
+      properties:
+        id:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_int_'
+          - type: 'null'
+        user_id:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_str_'
+          - type: 'null'
+        user_type:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_UserType_'
+          - type: 'null'
+        client_type:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_ClientType_'
+          - type: 'null'
+        total_duration:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_float_'
+          - type: 'null'
+        audit_metadata:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AuditMetadata'
+            type: array
+          - type: 'null'
+          title: Audit Metadata
+        nuclia_tokens:
+          anyOf:
+          - $ref: '#/components/schemas/GenericFilter_float_'
+          - type: 'null'
+        question:
+          anyOf:
+          - $ref: '#/components/schemas/StringFilter'
+          - type: 'null'
+        resources_count:
+          anyOf:
+          - $ref: '#/components/schemas/StringFilter'
+          - type: 'null'
+          cast_to: int
+      additionalProperties: false
+      type: object
+      title: QueryFiltersSearch
+    RemiAnswerRelevance:
+      properties:
+        score:
+          type: integer
+          title: Score
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - score
+      - reason
+      title: RemiAnswerRelevance
+    RemiQuery:
+      properties:
+        context_relevance:
+          anyOf:
+          - $ref: '#/components/schemas/ContextRelevanceQuery'
+          - type: 'null'
+        month:
+          type: string
+          title: Month
+        feedback_good:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Feedback Good
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/Status'
+          - type: 'null'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+          default:
+            limit: 10
+      type: object
+      required:
+      - month
+      title: RemiQuery
+    RemiQueryResult:
+      properties:
+        id:
+          type: integer
+          title: Id
+        question:
+          type: string
+          title: Question
+        answer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Answer
+        remi:
+          anyOf:
+          - $ref: '#/components/schemas/RemiScores'
+          - type: 'null'
+      type: object
+      required:
+      - id
+      - question
+      - answer
+      - remi
+      title: RemiQueryResult
+    RemiQueryResultWithContext:
+      properties:
+        id:
+          type: integer
+          title: Id
+        question:
+          type: string
+          title: Question
+        answer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Answer
+        remi:
+          anyOf:
+          - $ref: '#/components/schemas/RemiScores'
+          - type: 'null'
+        context:
+          items:
+            $ref: '#/components/schemas/RetrievedContext'
+          type: array
+          title: Context
+      type: object
+      required:
+      - id
+      - question
+      - answer
+      - remi
+      - context
+      title: RemiQueryResultWithContext
+    RemiQueryResults:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/RemiQueryResult'
+          type: array
+          title: Data
+        has_more:
+          type: boolean
+          title: Has More
+      type: object
+      required:
+      - data
+      - has_more
+      title: RemiQueryResults
+    RemiScores:
+      properties:
+        answer_relevance:
+          $ref: '#/components/schemas/RemiAnswerRelevance'
+        context_relevance:
+          items:
+            type: integer
+          type: array
+          title: Context Relevance
+        groundedness:
+          items:
+            type: integer
+          type: array
+          title: Groundedness
+      type: object
+      required:
+      - answer_relevance
+      - context_relevance
+      - groundedness
+      title: RemiScores
+    RetrievedContext:
+      properties:
+        text:
+          type: string
+          title: Text
+        text_block_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text Block Id
+      type: object
+      required:
+      - text
+      title: RetrievedContext
+    ShowOnly:
+      properties: {}
+      additionalProperties: false
+      type: object
+      title: ShowOnly
+      description: 'Marker class to indicate that a field is for display purposes
+        only.
+
+
+        Fields wrapped in this class are excluded from OpenAPI documentation to prevent
+        confusion,
+
+        as they are not intended for filtering. Instead, they are only used in the
+        "show" parameter.
+
+
+        This behavior is enforced in the FastAPI application through introspection,
+
+        ensuring these fields are removed from the generated API documentation.'
+    Status:
+      type: string
+      enum:
+      - SUCCESS
+      - ERROR
+      - NO_CONTEXT
+      title: Status
+    StringFilter:
+      properties:
+        eq:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Eq
+        gt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gt
+        ge:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ge
+        lt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lt
+        le:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Le
+        ne:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ne
+        isnull:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Isnull
+        like:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Like
+        ilike:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ilike
+      additionalProperties: false
+      type: object
+      title: StringFilter
+    UserType:
+      type: string
+      enum:
+      - user
+      - nuakey
+      title: UserType

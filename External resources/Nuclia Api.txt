@@ -1,0 +1,19 @@
+This is the information relative to Developer tools of nuclia 
+
+1. Introduction:
+All Nuclia features are available through its APIs. It covers all the steps from data ingestion to search and RAG.
+
+To simplify the development process, Nuclia provides two Software Development Kits (SDKs):
+
+Python SDK: It allows you to call the Nuclia API from a Python script, or to integrate Nuclia in popular Python web frameworks like Django. It also comes with a command-line interface (CLI) for enhanced usability.
+JavaScript/TypeScript SDK: It allows to integrate Nuclia in your frontend application, like React, Next.js, Angular, Vue.js, Svelte, etc.
+These SDKs serve as wrappers for the API. While we strive to keep them up-to-date, the API will always have the latest features.
+
+
+
+2.API
+https://docs.nuclia.dev/docs
+
+
+🧩 Ta mission :
+Crée un plan de développement complet, avec un accompagnement progressif, en commençant par une explication du fonctionnement global du logiciel, puis en détaillant chaque étape de l’implémentation (code inclus).
