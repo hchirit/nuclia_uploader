@@ -7,8 +7,6 @@ import os
 app = FastAPI()
 
 # 1. Authentification avec la KB et la clé API
-# Remplacez par votre URL de KB (ex. "https://europe-1.nuclia.cloud/api")
-# et votre API_KEY
 sdk.NucliaAuth().kb(
     url=settings.nuclia_url,
     token=settings.nuclia_api_token
