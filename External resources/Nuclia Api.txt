@@ -15,5 +15,4 @@ These SDKs serve as wrappers for the API. While we strive to keep them up-to-dat
 https://docs.nuclia.dev/docs
 
 
-🧩 Ta mission :
-Crée un plan de développement complet, avec un accompagnement progressif, en commençant par une explication du fonctionnement global du logiciel, puis en détaillant chaque étape de l’implémentation (code inclus).
+run app by executed this command : python -m uvicorn main3:app --reload
